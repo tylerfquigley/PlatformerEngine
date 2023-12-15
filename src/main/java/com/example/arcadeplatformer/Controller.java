@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 import static java.lang.System.currentTimeMillis;
 
@@ -97,20 +98,27 @@ public class Controller implements Runnable,inputHandler{
         run=true;
         long c;
         long s = currentTimeMillis();
-        while(run){
+        while(run){try {
+
+
             c= currentTimeMillis();
             if((c-s)>(1000/frameRate)){
                 c = currentTimeMillis();
                 s = currentTimeMillis();
 
                 iterateThroughAll();
-                Collision.handleCollisions(Level.getInstances(Collidable.class));
-            }
+                Collision.handleCollisions(Level.getInstances(Collidable.class));}
+            }catch (ConcurrentModificationException e){
+            //do nothing
+        }
         }
     }
     private void iterateThroughAll(){
         for (GameObject gameObject : level.gameObjects) {
-            gameObject.toDo();
+            if (gameObject.isMarkedForDeletion()){
+                level.gameObjects.remove(gameObject);
+            }else {
+            gameObject.toDo();}
         }
     }
     @Override

@@ -36,4 +36,9 @@ public class GroundBlock extends SolidObject{
     public boolean debug() {
         return true;
     }
+
+    @Override
+    public void loadSprite(String image) {
+
+    }
 }

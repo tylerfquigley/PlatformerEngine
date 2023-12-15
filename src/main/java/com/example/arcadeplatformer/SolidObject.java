@@ -49,7 +49,5 @@ public abstract class SolidObject extends CoordinateObject implements Collidable
             if (this.debug()){gc.strokeRect(getX()- (double) getbBoxW() /2, getY()- (double) getbBoxH() /2, getbBoxW(), getbBoxH());}}}
 
 
-    public void loadSprite(String image) {
-        sprite= loadImage(image);
-    }
+
 }

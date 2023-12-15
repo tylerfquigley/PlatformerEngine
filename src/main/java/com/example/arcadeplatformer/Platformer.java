@@ -22,21 +22,24 @@ public class Platformer extends Application{
         stage.setTitle("Platformer");
         stage.setScene(scene);
         stage.show();
-
+        Coin coin = new Coin();
+        coin.setX(200);
+        coin.setY(200);
+        Coin coin2 = new Coin();
+        coin2.setX(600);
+        coin2.setY(200);
         Player p = new Player();
-        p.loadSprite("robot.png");
         p.setMaze(new Image("levelmask.png"));
         p.setX(100);
         p.setY(200);
         p.setResetX(p.getX());
         p.setResetY(p.getY());
-        p.setbBoxH(25);
-        p.setbBoxW(25);
-        GroundBlock gb1 = new GroundBlock(400,50);
-        gb1.setX(200);
-        gb1.setY(500);
-        controller.addToLevel(gb1);
+        p.setbBoxH(50);
+        p.setbBoxW(50);
+        p.loadSprite("MainWalkingRight.gif");
         controller.addToLevel(p);
+        controller.addToLevel(coin);
+        controller.addToLevel(coin2);
 
 
 

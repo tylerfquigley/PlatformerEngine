@@ -9,6 +9,7 @@ import javafx.scene.image.PixelReader;
 import java.util.ArrayList;
 
 public class Player extends SolidObject{
+    private int state=1;
     private boolean right=false;
     private  boolean left=false;
     private  boolean up=false;
@@ -27,6 +28,16 @@ public class Player extends SolidObject{
     }
     @Override
     public boolean toDo() {
+        //if hit ground stop jump animation
+        if (grounded()&&state<0){
+            state= Math.abs(state);
+            if (state==1){
+                loadSprite("MainWalkingRight.gif");
+            }
+            if (state==2){
+                loadSprite("MainWalkingLeft.gif");
+            }
+        }
         //fetch inputs from controller
         right= Controller.isRight();
         left= Controller.isLeft();
@@ -34,9 +45,20 @@ public class Player extends SolidObject{
         down= Controller.isDown();
         //reset speed
 
-        if (right&&!left){setHsp(getHsp()+speed);}
-        if (!right&&left){setHsp(getHsp()-speed);}
-        if (up&&!down){jump();}
+        if (right&&!left){setHsp(getHsp()+speed);
+            if(state!=1&&state!=-1){
+            loadSprite("MainWalkingRight.gif");state=1;}
+        }
+        if (!right&&left){setHsp(getHsp()-speed);
+            if(state!=2&&state!=-2){
+                loadSprite("MainWalkingLeft.gif");state=2;}
+        }
+        if (up&&!down){jump();
+            if(state==2){
+                loadSprite("MainJumpLeft.gif");state=-2;}
+            if(state==1){
+                loadSprite("MainJumpRight.gif");state=-1;}
+        }
         if (!up&&down){setVsp(speed);}
         //was for debuging
        // if (left&&right){
@@ -60,7 +82,6 @@ public class Player extends SolidObject{
             //checks for collision based on pixel values will use mask values instead
             mazeCollide();
         }
-
         setX(getX()+getHsp());
         setY(getY()+getVsp());
         super.toDo();
@@ -71,11 +92,15 @@ public class Player extends SolidObject{
     public boolean debug() {
         return true;
     }
-
+    private boolean grounded(){
+        if (Collision.pixelCollision(this,pixelReader,0,1)){
+           return true;
+        }else return false;
+    }
 
     private void jump(){
         //check if grounded
-    if (Collision.pixelCollision(this,pixelReader,0,1)){
+    if (grounded()){
         setVsp(getVsp()-j_speed);
     }
 }
@@ -117,6 +142,13 @@ public class Player extends SolidObject{
 
     @Override
     public void collisionEvent(Collidable collision) {
+                    collision.markForDelettion();
+    }
 
+    @Override
+    public void loadSprite(String image) {
+        {
+            sprite= loadImage(image,getbBoxW(),getbBoxH());
+        }
     }
 }

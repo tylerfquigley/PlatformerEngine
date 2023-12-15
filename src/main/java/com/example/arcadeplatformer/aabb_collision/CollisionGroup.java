@@ -31,18 +31,20 @@ public void add(Collidable collidable){
 }
 public void resolve(){
     for(int i=0;i<unresolved.size();i++){
-        if (unresolved.get(i).getMass()==0){
-            unresolved.remove(i);
+        if (unresolved.get(i).getMass()<=0){
+
         }else {
             //check for interection with all other objects
             for (int j=0; j<all.size();j++){
                 if(unresolved.get(i)!=all.get(j)){
-                    while (Collision.intersects(unresolved.get(i),all.get(j))){
+                    while (Collision.intersects(unresolved.get(i),all.get(j))&&all.get(j).getMass()>0){
                                  Collision.moveApart(unresolved.get(i),all.get(j));
                                 System.out.println("moving");
                     }
+                    unresolved.get(i).collisionEvent(all.get(j));
                 }
             }
+
             unresolved.remove(i);
         }
     }

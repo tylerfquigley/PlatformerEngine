@@ -9,9 +9,22 @@ import javafx.scene.image.Image;
 import java.util.ArrayList;
 
 public interface Renderable extends Coordinatable {
+    void loadSprite(String image);
     default Image loadImage(String path){
         try {
             Image sprite = new Image(path);
+
+            return sprite;
+        }
+        catch (Exception e){
+            System.out.print("Failed to load image "+ path);
+            return null;
+        }
+    }
+
+    default Image loadImage(String path,int width,int height){
+        try {
+            Image sprite = new Image(path,width,height,true,false);
 
             return sprite;
         }
